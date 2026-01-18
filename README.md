@@ -1,6 +1,18 @@
 # **binf** - *a very useless tool...*
 
-Have you ever ~~coded in **C** with your life on the line~~ opened a `.exe` file in **NotePad** or **NotePad++** or whatever and you see something like this.
+## *Also before that I want to note...*
+
+Who the *FUCK* is this guy?
+
+<img src="md_data/who_tf_is_david_powell.png" width="300">
+
+Question is HOW did this guy get here?! I am beyond speechless... *AND **GITHUB** SHOWS HE TOOK ALL OF THE CREDIT FOR MY CODE.*
+
+Guys I swear the code is mine... but uh shoutout **David** I suppose...? I can't remove him too.
+
+---
+
+Anyways back on track!! Have you ever ~~coded in **C** with your life on the line~~ opened a `.exe` file in **NotePad** or **NotePad++** or whatever and you see something like this.
 
 ![machine code for binf.exe](md_data/binf_machine_code.png)
 
