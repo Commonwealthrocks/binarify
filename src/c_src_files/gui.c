@@ -146,7 +146,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             ofn.hwndOwner = hwnd;
             ofn.lpstrFile = file;
             ofn.nMaxFile = MAX_PATH;
-            ofn.lpstrFilter = "All files\0*.*\0Executable\0*.exe\0BXE Files\0*.bxe\0";
+            ofn.lpstrFilter = "All files\0*.*\0Executable\0*.exe\0BXE files\0*.bxe\0";
             ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
             if (GetOpenFileNameA(&ofn))
             {
