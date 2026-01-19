@@ -1,14 +1,14 @@
 # **binf** - *a very useless tool...*
 
-## *Also before that I want to note...*
+### **Also before that I want to note...**
 
 Who the *FUCK* is this guy?
 
 <img src="md_data/who_tf_is_david_powell.png" width="300">
 
-Question is HOW did this guy get here?! I am beyond speechless... *AND **GITHUB** SHOWS HE TOOK ALL OF THE CREDIT FOR MY CODE.*
+**David Powell** with a whole ass `PhD` got into this repo, and I managed to take back the code I commited.
 
-Guys I swear the code is mine... but uh shoutout **David** I suppose...? I can't remove him too.
+**GitHub** still doesn't let me remove him from the list... for some reason? So he gets to stay!!
 
 ---
 
@@ -67,6 +67,9 @@ However; this **VFS** shit that I've made is far from flawless but... better any
 
 ### **Windows integration**
 Double clicking a `.bxe` file (assuming you've ran `binf install cm` and `binf path`) will decrypts and runs the file and run it just like a regular `.exe`; pretty neat?
+
+### **GUI**
+While the `GUI` there is just for fun, by double clicking on `binf.exe` or running it through your terminal, it will open up the `GUI`. Bear in mind it is not perfect and it's just there if you're afraid of commands in your spooky terminal.
 
 ### **MIT license**
 Explains itself on what it does. Do anything with the app, and I won't deal with your problems.
