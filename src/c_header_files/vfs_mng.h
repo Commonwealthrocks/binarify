@@ -1,5 +1,5 @@
 // vfs_mng.h
-// last updated: 18/01/2026 <d/m/y>
+// last updated: 19/01/2026 <d/m/y>
 #ifndef VFS_MNG_H
 #define VFS_MNG_H
 #include "../c_header_files/common.h"
@@ -37,6 +37,7 @@ HMODULE WINAPI Hooked_GetModuleHandleA(LPCSTR lpModuleName);
 HMODULE WINAPI Hooked_GetModuleHandleW(LPCWSTR lpModuleName);
 FARPROC WINAPI Hooked_GetProcAddress(HMODULE hModule, LPCSTR lpProcName);
 void init_hooks();
+void set_fake_cmdline(const char *cmd);
 #endif
 
 // end
