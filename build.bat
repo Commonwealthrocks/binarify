@@ -18,13 +18,13 @@ if "%1"=="rebuild" (
 )
 :interactive
 echo ------------------------------------------------------------
-echo   build.bat                                                |
-echo   You may not question my methods.                         |
+echo   build.bat
+echo   You may not question my methods.
 echo ------------------------------------------------------------
-echo.                                                           |
-echo You will be asked a series of questions / preferences.     |
-echo Type 1 for "yeah" or 0 for "fuh nah"; starting now.        |
-echo.                                                           |
+echo.
+echo You will be asked a series of questions / preferences.
+echo Type 1 for "yeah" or 0 for "fuh nah"; starting now.
+echo.
 echo ------------------------------------------------------------
 :ask_keep_objs
 set /p KEEP_OBJS="Do you wish to keep the [.o] files after compiling? >> "
@@ -144,10 +144,10 @@ if "%KEEP_OBJS%"=="0" (
 )
 echo.
 echo ------------------------------------------------------------
-echo   Finished compiling                                       |
+echo   Finished compiling
 echo ------------------------------------------------------------
-echo   Output: %DIST_DIR%\binf.exe                              |
-for %%A in (%DIST_DIR%\binf.exe) do echo   Size: %%~zA bytes    |
+echo   Output: %DIST_DIR%\binf.exe
+for %%A in (%DIST_DIR%\binf.exe) do echo   Size: %%~zA bytes
 echo ------------------------------------------------------------
 exit /b 0
 :clean
