@@ -46,12 +46,12 @@ void ProcessAction(HWND hwnd)
     GetWindowTextA(hEditPass, pass, 256);
     if (strlen(input) == 0)
     {
-        SetWindowTextA(hStatus, "Status: Please select an input file.");
+        SetWindowTextA(hStatus, "[INFO] Please select an input file.");
         return;
     }
     if (strstr(input, ".bxe"))
     {
-        SetWindowTextA(hStatus, "Status: Decrypting and running...");
+        SetWindowTextA(hStatus, "[INFO] Decrypting and running...");
         const char *p = (strlen(pass) > 0) ? pass : DEFAULT_PASSWORD;
         (strlen(pass) > 0) ? pass : DEFAULT_PASSWORD;
         if (decrypt_and_run(input, p) == 0)
@@ -176,11 +176,11 @@ void c_gui_run()
     WNDCLASSA wc = {0};
     wc.lpfnWndProc = WindowProc;
     wc.hInstance = GetModuleHandle(NULL);
-    wc.lpszClassName = "BinfGUI";
+    wc.lpszClassName = "binf";
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc.hbrBackground = NULL;
     RegisterClassA(&wc);
-    HWND hwnd = CreateWindowA("BinfGUI", "Binf - Configuration & Tool", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, WINDOW_WIDTH, WINDOW_HEIGHT, NULL, NULL, wc.hInstance, NULL);
+    HWND hwnd = CreateWindowA("binf", "binf - GUI ver. coz why not", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, WINDOW_WIDTH, WINDOW_HEIGHT, NULL, NULL, wc.hInstance, NULL);
     ShowWindow(hwnd, SW_SHOW);
     MSG msg = {0};
     while (GetMessage(&msg, NULL, 0, 0))
