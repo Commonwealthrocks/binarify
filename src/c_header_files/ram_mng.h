@@ -1,4 +1,5 @@
 // ram_mng.h
+// last updated: 19/01/2026 <d/m/y>
 #ifndef RAM_MNG_H
 #define RAM_MNG_H
 #include "../c_header_files/common.h"

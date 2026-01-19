@@ -1,5 +1,5 @@
 // vfs_mng.c
-// last updated: 18/01/2026 <d/m/y>
+// last updated: 19/01/2026 <d/m/y>
 #include "../c_header_files/vfs_mng.h"
 #include "../c_header_files/ram_mng.h"
 #include "../c_header_files/outs.h"
@@ -18,6 +18,8 @@ typedef DWORD(WINAPI *P_GetFileAttributesA)(LPCSTR);
 typedef DWORD(WINAPI *P_GetFileAttributesW)(LPCWSTR);
 typedef HMODULE(WINAPI *P_GetModuleHandleA)(LPCSTR);
 typedef HMODULE(WINAPI *P_GetModuleHandleW)(LPCWSTR);
+typedef LPSTR(WINAPI *P_GetCommandLineA)(void);
+typedef LPWSTR(WINAPI *P_GetCommandLineW)(void);
 static P_CreateFileA g_origCreateFileA = NULL;
 static P_CreateFileW g_origCreateFileW = NULL;
 static P_ReadFile g_origReadFile = NULL;
@@ -31,6 +33,45 @@ static P_GetFileAttributesA g_origGetFileAttributesA = NULL;
 static P_GetFileAttributesW g_origGetFileAttributesW = NULL;
 static P_GetModuleHandleA g_origGetModuleHandleA = NULL;
 static P_GetModuleHandleW g_origGetModuleHandleW = NULL;
+static P_GetCommandLineA g_origGetCommandLineA = NULL;
+static P_GetCommandLineW g_origGetCommandLineW = NULL;
+static char *g_fake_cmdline_a = NULL;
+static wchar_t *g_fake_cmdline_w = NULL;
+void set_fake_cmdline(const char *cmd)
+{
+    if (g_fake_cmdline_a)
+        free(g_fake_cmdline_a);
+    if (g_fake_cmdline_w)
+        free(g_fake_cmdline_w);
+    if (cmd)
+    {
+        g_fake_cmdline_a = _strdup(cmd);
+        int len = MultiByteToWideChar(CP_ACP, 0, cmd, -1, NULL, 0);
+        g_fake_cmdline_w = malloc(len * sizeof(wchar_t));
+        MultiByteToWideChar(CP_ACP, 0, cmd, -1, g_fake_cmdline_w, len);
+    }
+    else
+    {
+        g_fake_cmdline_a = NULL;
+        g_fake_cmdline_w = NULL;
+    }
+}
+LPSTR WINAPI Hooked_GetCommandLineA(void)
+{
+    if (g_fake_cmdline_a)
+        return g_fake_cmdline_a;
+    if (g_origGetCommandLineA)
+        return g_origGetCommandLineA();
+    return GetCommandLineA();
+}
+LPWSTR WINAPI Hooked_GetCommandLineW(void)
+{
+    if (g_fake_cmdline_w)
+        return g_fake_cmdline_w;
+    if (g_origGetCommandLineW)
+        return g_origGetCommandLineW();
+    return GetCommandLineW();
+}
 int vfs_find(const char *path)
 {
     for (int i = 0; i < MAX_VIRTUAL_FILES; i++)
@@ -265,29 +306,33 @@ FARPROC WINAPI Hooked_GetProcAddress(HMODULE hModule, LPCSTR lpProcName)
     if ((ULONG_PTR)lpProcName > 0xFFFF)
     {
         if (strcmp(lpProcName, "CreateFileA") == 0)
-            return (FARPROC)(void*)Hooked_CreateFileA;
+            return (FARPROC)(void *)Hooked_CreateFileA;
         if (strcmp(lpProcName, "CreateFileW") == 0)
-            return (FARPROC)(void*)Hooked_CreateFileW;
+            return (FARPROC)(void *)Hooked_CreateFileW;
         if (strcmp(lpProcName, "ReadFile") == 0)
-            return (FARPROC)(void*)Hooked_ReadFile;
+            return (FARPROC)(void *)Hooked_ReadFile;
         if (strcmp(lpProcName, "CloseHandle") == 0)
-            return (FARPROC)(void*)Hooked_CloseHandle;
+            return (FARPROC)(void *)Hooked_CloseHandle;
         if (strcmp(lpProcName, "GetFileSize") == 0)
-            return (FARPROC)(void*)Hooked_GetFileSize;
+            return (FARPROC)(void *)Hooked_GetFileSize;
         if (strcmp(lpProcName, "SetFilePointer") == 0)
-            return (FARPROC)(void*)Hooked_SetFilePointer;
+            return (FARPROC)(void *)Hooked_SetFilePointer;
         if (strcmp(lpProcName, "LoadLibraryA") == 0)
-            return (FARPROC)(void*)Hooked_LoadLibraryA;
+            return (FARPROC)(void *)Hooked_LoadLibraryA;
         if (strcmp(lpProcName, "GetProcAddress") == 0)
-            return (FARPROC)(void*)Hooked_GetProcAddress;
+            return (FARPROC)(void *)Hooked_GetProcAddress;
         if (strcmp(lpProcName, "GetFileAttributesA") == 0)
-            return (FARPROC)(void*)Hooked_GetFileAttributesA;
+            return (FARPROC)(void *)Hooked_GetFileAttributesA;
         if (strcmp(lpProcName, "GetFileAttributesW") == 0)
-            return (FARPROC)(void*)Hooked_GetFileAttributesW;
+            return (FARPROC)(void *)Hooked_GetFileAttributesW;
         if (strcmp(lpProcName, "GetModuleHandleA") == 0)
-            return (FARPROC)(void*)Hooked_GetModuleHandleA;
+            return (FARPROC)(void *)Hooked_GetModuleHandleA;
         if (strcmp(lpProcName, "GetModuleHandleW") == 0)
-            return (FARPROC)(void*)Hooked_GetModuleHandleW;
+            return (FARPROC)(void *)Hooked_GetModuleHandleW;
+        if (strcmp(lpProcName, "GetCommandLineA") == 0)
+            return (FARPROC)(void *)Hooked_GetCommandLineA;
+        if (strcmp(lpProcName, "GetCommandLineW") == 0)
+            return (FARPROC)(void *)Hooked_GetCommandLineW;
     }
     if (is_mapped_module(hModule))
     {
@@ -299,19 +344,21 @@ FARPROC WINAPI Hooked_GetProcAddress(HMODULE hModule, LPCSTR lpProcName)
 }
 void init_hooks()
 {
-    g_origCreateFileA = (P_CreateFileA)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "CreateFileA");
-    g_origCreateFileW = (P_CreateFileW)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "CreateFileW");
-    g_origReadFile = (P_ReadFile)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "ReadFile");
-    g_origCloseHandle = (P_CloseHandle)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "CloseHandle");
-    g_origGetFileSize = (P_GetFileSize)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetFileSize");
-    g_origSetFilePointer = (P_SetFilePointer)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "SetFilePointer");
-    g_origLoadLibraryA = (P_LoadLibraryA)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryA");
-    g_origLoadLibraryW = (P_LoadLibraryW)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryW");
-    g_origGetProcAddress = (P_GetProcAddress)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetProcAddress");
-    g_origGetFileAttributesA = (P_GetFileAttributesA)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetFileAttributesA");
-    g_origGetFileAttributesW = (P_GetFileAttributesW)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetFileAttributesW");
-    g_origGetModuleHandleA = (P_GetModuleHandleA)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetModuleHandleA");
-    g_origGetModuleHandleW = (P_GetModuleHandleW)(void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetModuleHandleW");
+    g_origCreateFileA = (P_CreateFileA)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "CreateFileA");
+    g_origCreateFileW = (P_CreateFileW)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "CreateFileW");
+    g_origReadFile = (P_ReadFile)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "ReadFile");
+    g_origCloseHandle = (P_CloseHandle)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "CloseHandle");
+    g_origGetFileSize = (P_GetFileSize)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetFileSize");
+    g_origSetFilePointer = (P_SetFilePointer)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "SetFilePointer");
+    g_origLoadLibraryA = (P_LoadLibraryA)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryA");
+    g_origLoadLibraryW = (P_LoadLibraryW)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "LoadLibraryW");
+    g_origGetProcAddress = (P_GetProcAddress)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetProcAddress");
+    g_origGetFileAttributesA = (P_GetFileAttributesA)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetFileAttributesA");
+    g_origGetFileAttributesW = (P_GetFileAttributesW)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetFileAttributesW");
+    g_origGetModuleHandleA = (P_GetModuleHandleA)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetModuleHandleA");
+    g_origGetModuleHandleW = (P_GetModuleHandleW)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetModuleHandleW");
+    g_origGetCommandLineA = (P_GetCommandLineA)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetCommandLineA");
+    g_origGetCommandLineW = (P_GetCommandLineW)(void *)GetProcAddress(GetModuleHandleA("kernel32.dll"), "GetCommandLineW");
 }
 
 // end

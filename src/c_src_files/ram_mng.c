@@ -1,5 +1,5 @@
 // ram_mng.c
-// last updated: 18/01/2026 <d/m/y>
+// last updated: 19/01/2026 <d/m/y>
 #include "../c_header_files/ram_mng.h"
 #include "../c_header_files/vfs_mng.h"
 #include "../c_header_files/outs.h"
@@ -24,7 +24,7 @@ int is_mapped_module(HMODULE hMod)
 }
 void *manual_map_pe(unsigned char *pe_data, size_t pe_size)
 {
-    (void)pe_size; // Unused
+    (void)pe_size;
     if (!g_silent)
         printf("[DEBUG] Manual mapping PE...\n");
     IMAGE_DOS_HEADER_MINI *dos = (IMAGE_DOS_HEADER_MINI *)pe_data;
