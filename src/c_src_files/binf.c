@@ -1,5 +1,5 @@
 // binf.c
-// last updated: 18/01/2026 <d/m/y>
+// last updated: 19/01/2026 <d/m/y>
 #include "../c_header_files/common.h"
 #include "../c_header_files/cli.h"
 #include "../c_header_files/cm.h"
@@ -7,8 +7,14 @@
 #include "../c_header_files/vfs_mng.h"
 #include "../c_header_files/outs.h"
 #include "../c_header_files/_compiler_based.h"
+#include "../c_header_files/gui.h"
 int main(int argc, char *argv[])
 {
+    if (argc == 1)
+    {
+        c_gui_run();
+        return 0;
+    }
     init_hooks();
     for (int i = 1; i < argc; i++)
     {
