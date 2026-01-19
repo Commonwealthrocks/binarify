@@ -18,13 +18,13 @@ if "%1"=="rebuild" (
 )
 :interactive
 echo ------------------------------------------------------------
-echo   build.bat
-echo   You may not question my methods.
+echo   build.bat                                                |
+echo   You may not question my methods.                         |
 echo ------------------------------------------------------------
-echo.
-echo You will be asked a series of questions / preferences.
-echo Type 1 for "yeah" or 0 for "fuh nah"; starting now.
-echo.
+echo.                                                           |
+echo You will be asked a series of questions / preferences.     |
+echo Type 1 for "yeah" or 0 for "fuh nah"; starting now.        |
+echo.                                                           |
 echo ------------------------------------------------------------
 :ask_keep_objs
 set /p KEEP_OBJS="Do you wish to keep the [.o] files after compiling? >> "
@@ -54,7 +54,7 @@ goto :ask_optimize
 echo Understood.
 echo.
 :ask_static
-set /p STATIC="Create a static build (no dependencies)? >> "
+set /p STATIC="Create a static build (dependencies at RT; 6MB)? >> "
 if "%STATIC%"=="0" goto :ask_static_ok
 if "%STATIC%"=="1" goto :ask_static_ok
 echo Invalid input. Enter 1 or 0.
@@ -85,12 +85,12 @@ if "%OPTIMIZE%"=="1" (
 
 if "%STATIC%"=="1" (
     set STATIC_FLAG=-static
-    set LIBS=-lssl -lcrypto -largon2 -ladvapi32 -lws2_32 -lcrypt32 -lbcrypt
+    set LIBS=-lssl -lcrypto -largon2 -ladvapi32 -lws2_32 -lcrypt32 -lbcrypt -lgdi32 -luser32 -ldwmapi -lcomctl32 -luxtheme -lcomdlg32
     echo [CONFIG] Static build: enabled ^(this might take a bit lolz^).
     echo [CONFIG] Extra libs: ws2_32, crypt32, bcrypt
 ) else (
     set STATIC_FLAG=
-    set LIBS=-lssl -lcrypto -largon2 -ladvapi32
+    set LIBS=-lssl -lcrypto -largon2 -ladvapi32 -lgdi32 -luser32 -ldwmapi -lcomctl32 -luxtheme -lcomdlg32
     echo [CONFIG] Static build: disabled.
 )
 
@@ -144,10 +144,10 @@ if "%KEEP_OBJS%"=="0" (
 )
 echo.
 echo ------------------------------------------------------------
-echo   COMPILATION COMPLETE
+echo   Finished compiling                                       |
 echo ------------------------------------------------------------
-echo   Output: %DIST_DIR%\binf.exe
-for %%A in (%DIST_DIR%\binf.exe) do echo   Size: %%~zA bytes
+echo   Output: %DIST_DIR%\binf.exe                              |
+for %%A in (%DIST_DIR%\binf.exe) do echo   Size: %%~zA bytes    |
 echo ------------------------------------------------------------
 exit /b 0
 :clean
