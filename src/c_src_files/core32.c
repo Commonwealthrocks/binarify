@@ -25,7 +25,6 @@ void derive_key_32(const char *password, unsigned char *salt, unsigned char *key
         exit(1);
     }
 }
-
 static void write_bits(FILE *f, unsigned char *data, int size)
 {
     for (int i = 0; i < size; i++)
@@ -36,7 +35,6 @@ static void write_bits(FILE *f, unsigned char *data, int size)
         }
     }
 }
-
 static void read_bits(FILE *f, unsigned char *out, int size)
 {
     for (int i = 0; i < size; i++)
@@ -122,7 +120,6 @@ int encrypt_and_binaryify_32(const char *input, const char *output, const char *
     }
     if (!g_silent)
         printf("\rFinished encrypting %ld bytes.\n", file_size);
-
     fclose(out);
     secure_zero(plaintext, file_size);
     secure_zero(ciphertext, ciphertext_len);
@@ -139,7 +136,6 @@ int decrypt_and_run_32(const char *input, const char *password)
             printf("[ERROR] Cannot open '%s'\n", input);
         return 1;
     }
-
     if (!g_silent)
         printf("Decrypting (32 bit core) '%s'...\n", input);
     unsigned char size_bytes[4];
