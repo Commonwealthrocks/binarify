@@ -4,7 +4,7 @@
 
 Who the *FUCK* is this guy?
 
-<img src="md_data/who_tf_is_david_powell.png" width="300">
+<img src="md_data/who_tf_is_david_powell.png" width="400">
 
 **David Powell** with a whole ass `PhD` got into this repo, and I managed to take back the code I commited.
 
@@ -69,7 +69,11 @@ However; this **VFS** shit that I've made is far from flawless but... better any
 Double clicking a `.bxe` file (assuming you've ran `binf install cm` and `binf path`) will decrypts and runs the file and run it just like a regular `.exe`; pretty neat?
 
 ### **GUI**
-While the `GUI` there is just for fun, by double clicking on `binf.exe` or running it through your terminal, it will open up the `GUI`. Bear in mind it is not perfect and it's just there if you're afraid of commands in your spooky terminal.
+<img src="md_data/binf_gui.png" width="400">
+
+While the `GUI` is just for fun, by double clicking on `binf.exe` or running it through your terminal, it will open up the interface. You can encrypt/decrypt files, set custom passwords, and adjust Argon2ID parameters without touching the command line.
+
+Now you might be thinking *"This looks like shit?"*, first of all SCREW you and second of all how about you try to make anything good looking in bumass `Win32API`.
 
 ### **MIT license**
 Explains itself on what it does. Do anything with the app, and I won't deal with your problems.
